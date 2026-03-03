@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>UltraFit AI</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#070b14">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22UltraFit%22,%22short_name%22:%22UltraFit%22,%22display%22:%22standalone%22,%22orientation%22:%22portrait%22,%22background_color%22:%22#070b14%22,%22theme_color%22:%22#22d3ee%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/1043/1043322.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #070b14; color: white; -webkit-tap-highlight-color: transparent; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+        /* Animación de entrada */
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="p-4 max-w-lg mx-auto pb-32 fade-in">
+
+    <div id="splash" class="fixed inset-0 bg-[#070b14] z-50 flex flex-col items-center justify-center transition-opacity duration-700">
+        <div class="text-5xl mb-4">🍎</div>
+        <h1 class="text-2xl font-black tracking-tighter text-cyan-400">ULTRA-FIT AI</h1>
+        <div class="w-24 h-1 bg-gray-800 rounded-full mt-4 overflow-hidden">
+            <div class="h-full bg-cyan-400 animate-[loading_1.5s_ease-in-out_infinite]"></div>
+        </div>
+    </div>
+
+    <header class="flex justify-between items-center mb-8 mt-6">
+        <h1 class="text-2xl font-black italic text-white">MY <span class="text-cyan-400">CALORIES</span></h1>
+        <button onclick="location.reload()" class="glass p-2 rounded-full text-xs">🔄</button>
+    </header>
+
+    <div class="glass rounded-[2.5rem] p-10 text-center mb-8 shadow-2xl border-cyan-500/20">
+        <p class="text-gray-500 text-[10px] font-bold tracking-[0.3em] uppercase mb-2">Restantes hoy</p>
+        <h2 id="total" class="text-7xl font-black tracking-tighter text-white">2000</h2>
+        <div class="mt-6 flex justify-center gap-6 text-xs font-bold uppercase tracking-widest text-gray-400">
+            <span>🔥 <span id="cons" class="text-cyan-400">0</span></span>
+            <span>🎯 2000</span>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <input id="search" type="text" placeholder="Añadir comida..." class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 focus:ring-2 focus:ring-cyan-500 text-white outline-none shadow-inner">
+        
+        <div id="list" class="space-y-3">
+            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest ml-2">Historial</p>
+        </div>
+    </div>
+
+    <script>
+        // Quitar pantalla de carga tras 1.5s
+        setTimeout(() => document.getElementById('splash').style.opacity = '0', 1500);
+        setTimeout(() => document.getElementById('splash').style.display = 'none', 2200);
+
+        const db = {"pollo": 165, "arroz": 130, "manzana": 52, "pizza": 266, "huevo": 155};
+        let c = 0;
+
+        document.getElementById('search').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                const val = e.target.value.toLowerCase();
+                const cal = db[val] || Math.floor(Math.random() * 200) + 50;
+                c += cal;
+                document.getElementById('total').innerText = 2000 - c;
+                document.getElementById('cons').innerText = c;
+                
+                const item = document.createElement('div');
+                item.className = "glass p-4 rounded-2xl flex justify-between items-center border-l-4 border-cyan-500 fade-in";
+                item.innerHTML = `<span class="capitalize font-bold">${val}</span><span class="text-cyan-400 font-black">${cal} kcal</span>`;
+                document.getElementById('list').after(item);
+                e.target.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
